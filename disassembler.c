@@ -146,8 +146,22 @@ int main(int argc, char **argv) {
               haltCount = 0;
           }
       }
+
+      int function;
+
+      if((0x0f & (theCharacter >> 4)) == 2){
+          function = theCharacter & 0x0f;
+          theCharacter = 0x20;
+      }
+      if((0x0f & (theCharacter >> 4)) == 6){
+          function = theCharacter & 0x0f;
+          theCharacter = 0x60;
+      }
+      if((0x0f & (theCharacter >> 4)) == 7){
+          function = theCharacter & 0x0f;
+          theCharacter = 0x70;
   }
-  
+
   fclose(machineCode);
   fclose(outputFile);
   return SUCCESS;
