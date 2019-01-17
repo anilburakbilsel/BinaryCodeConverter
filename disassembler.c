@@ -160,7 +160,9 @@ int main(int argc, char **argv) {
       if((0x0f & (theCharacter >> 4)) == 7){
           function = theCharacter & 0x0f;
           theCharacter = 0x70;
+      }
   }
+
 
   fclose(machineCode);
   fclose(outputFile);
