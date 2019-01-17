@@ -147,20 +147,21 @@ int main(int argc, char **argv) {
           }
       }
 
-      int function;
+      int iFun;
 
       if((0x0f & (theCharacter >> 4)) == 2){
-          function = theCharacter & 0x0f;
+          iFun = theCharacter & 0x0f;
           theCharacter = 0x20;
       }
       if((0x0f & (theCharacter >> 4)) == 6){
-          function = theCharacter & 0x0f;
+          iFun = theCharacter & 0x0f;
           theCharacter = 0x60;
       }
       if((0x0f & (theCharacter >> 4)) == 7){
-          function = theCharacter & 0x0f;
+          iFun = theCharacter & 0x0f;
           theCharacter = 0x70;
       }
+      
   }
 
 
