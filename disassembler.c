@@ -162,7 +162,14 @@ int main(int argc, char **argv) {
           theCharacter = 0x70;
       }
       
+      switch(theCharacter){
+          case 0x00 :
+            // we handle it above
+            break;
+          break;
+      }
   }
+
 
 
   fclose(machineCode);
