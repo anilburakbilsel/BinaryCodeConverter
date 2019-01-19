@@ -162,14 +162,36 @@ int main(int argc, char **argv) {
           theCharacter = 0x70;
       }
       
-      switch(theCharacter){
-          case 0x00 :
-            // we handle it above
-            break;
-          break;
-      }
-  }
-
+      witch(c){
+          // halt
+        case 0x00 :
+            // do not do anything because we do it when we read the byte/
+            // this is handled differently according to the spec
+         break;
+         
+         // nop
+        case 0x10 :
+            printByte(outputFile, 1);
+            
+         break;
+         
+         // cmov
+        case 0x20 :
+            // get the fn code
+            if((fn) >6 || (fn)<0){
+                // invalid instruction, check the address and print byte
+                currentAddress--;
+                printInvalid(outputFile);
+                break;
+            }
+            
+            // check registers if code is OK
+            registers = fgetc(machineCode);
+            if( feof(machineCode) ) { // break the loop if end of file
+                currentAddress -= 1; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                 break ;
+            }
 
 
   fclose(machineCode);
