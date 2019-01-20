@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
           theCharacter = 0x70;
       }
       
-      witch(c){
+switch(c){
           // halt
         case 0x00 :
             // do not do anything because we do it when we read the byte/
@@ -192,6 +192,86 @@ int main(int argc, char **argv) {
                 printInvalid(machineCode);
                  break ;
             }
+            currentAddress++; // update every time you read
+            r1 = (registers & 0xf0)>>4;
+            r2 = registers & 0x0f;
+            
+            if(r1 < 0 || r2 < 0 || r1 > 14 || r2 > 14){
+                currentAddress -= 2; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                break;
+            }
+   
+            // valid instruction
+            printTwoBytes(outputFile, 2, fn, r1, r2);
+         break;
+         
+         // irmov
+         case 0x30 :
+            // check registers if code is OK
+            registers = fgetc(machineCode);
+            if( feof(machineCode) ) { // break the loop if end of file
+                currentAddress -= 1; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                 break ;
+            }
+            
+            currentAddress++; // update every time you read
+            r1 = (registers & 0xf0)>>4;
+            r2 = registers & 0x0f;
+           
+            if(r1 != 15 || r2 < 0 || r2 > 14){
+                currentAddress -= 2; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                break;
+            }
+            
+            // check value if code is OK
+            if(fread(&value, 8, 1, machineCode) != 1){
+                currentAddress = currentAddress -2;
+                printInvalid(outputFile);
+                break;
+            }
+            // update every time you read
+            currentAddress = currentAddress + 8;
+            // valid instruction
+            printTenBytes(outputFile, 3, r1, r2, value);
+             
+         break;
+         
+         // rmmov rA, D(rB)
+         case 0x40 :
+            // check registers if code is OK
+            registers = fgetc(machineCode);
+            if( feof(machineCode) ) { // break the loop if end of file
+                currentAddress -= 1; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                 break ;
+            }
+            currentAddress++; // update every time you read
+            r1 = (registers & 0xf0)>>4;
+            r2 = registers & 0x0f;
+            
+            if(r1 <0 || r1>14 || r2 < 0 || r2 > 14){
+                currentAddress -= 2; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                break;
+            }
+            
+            
+            // check offset if code is OK
+            if(fread(&value, 8, 1, machineCode) != 1){
+                currentAddress = currentAddress -2;
+                printInvalid(outputFile);
+                break;
+            }
+            // update every time you read
+            currentAddress +=8;
+            
+            // valid instruction
+            printTenBytes(outputFile, 4, r1, r2, value);
+         break;
+         
 
 
   fclose(machineCode);
