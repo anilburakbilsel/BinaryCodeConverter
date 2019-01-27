@@ -1,4 +1,4 @@
-#include <stdio.h>
+\#include <stdio.h>
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/uio.h>
@@ -15,6 +15,39 @@
 
 long int currentAddress; // index to start reading instructions
 FILE *machineCode, *outputFile; // files to read from/write to
+
+/* Checks the address if it is multiple of 8 and the next 8 bytes if there is 
+ * an 8-byte number it prints it;
+ * otherwise prints the byte number. Then it sets the currentAddress to 
+ * next instruction.
+ * @BEFORE: set currentAddress to beginning of the instruction.
+ */
+void printInvalid(FILE *in){
+    long long quad;
+    fseek(in, currentAddress, SEEK_SET);
+    if (currentAddress % 8 == 0) {
+        if(fread(&quad, 8, 1, in) == 1){
+            printQuadValue(outputFile, quad);
+            currentAddress = currentAddress + 8;
+            // file index is at next instruction
+        }
+        else{
+        fseek(in, currentAddress, SEEK_SET);
+        int c = fgetc(in); // always valid; its called after getting the byte
+        printByteValue(outputFile, c);
+        currentAddress = currentAddress + 1;
+        }
+    }   
+    else{
+        fseek(in, currentAddress, SEEK_SET);
+        int c = fgetc(in); // always valid; its called after getting the byte
+        printByteValue(outputFile, c);
+        currentAddress = currentAddress + 1;
+        // file index is at next instruction
+    } 
+}
+
+
 
 int main(int argc, char **argv) {  
   // Verify that the command line has an appropriate number
@@ -161,109 +194,18 @@ int main(int argc, char **argv) {
           iFun = theCharacter & 0x0f;
           theCharacter = 0x70;
       }
-      
-   // jXX DEST
-         case 0x70 :  // TODO 
-            // get the fn code
-            if((fn) >6 || (fn)<0){
-                // invalid instruction, check the address and print byte
-                currentAddress--;
-                printInvalid(outputFile);
-                break;
-            }
-            
-            // check dest if code is OK
-            if(fread(&value, 8, 1, machineCode) != 1){
-                currentAddress--;
-                printInvalid(outputFile);
-                break;
-            }
-            // update every time you read
-            currentAddress +=8;
-            
-            // valid instruction
-            printNineBytes(outputFile, 7, fn, value);
-         break;
-         
-         // call Dest
-         case 0x80 :  
-            // check dest if code is OK
-            if(fread(&value, 8, 1, machineCode) != 1){
-                currentAddress--;
-                printInvalid(outputFile);
-                break;
-            }
-            // update every time you read
-            currentAddress +=8;
-            
-            // valid instruction
-            printNineBytes(outputFile, 8, 0, value);
-         break;
-         
-         // ret
-         case 0x90 :
-         printByte(outputFile, 2);
-         break;
-         
-         // pushq rA
-         case 0xA0 :
-            // check registers if code is OK
-            registers = fgetc(machineCode);
-            if( feof(machineCode) ) { // break the loop if end of file
-                currentAddress -= 1; // decrement before you call printinvalid
-                printInvalid(machineCode);
-                 break ;
-            }
-            currentAddress++; // update every time you read
-            r1 = (registers & 0xf0)>>4;
-            r2 = registers & 0x0f;
-            
-            if(r1 < 0 || r1 > 14 || r2 != 15){
-                currentAddress -= 2; // decrement before you call printinvalid
-                printInvalid(machineCode);
-                break;
-            }
-            
-            // valid instruction
-            printTwoBytes(outputFile, 10, -1, r1, r2);
-         break;
-         
-         // popq rA
-         case 0xB0 :
-             // check registers if code is OK
-            registers = fgetc(machineCode);
-            if( feof(machineCode) ) { // break the loop if end of file
-                currentAddress -= 1; // decrement before you call printinvalid
-                printInvalid(machineCode);
-                 break ;
-            }
-            currentAddress++; // update every time you read
-            r1 = (registers & 0xf0)>>4;
-            r2 = registers & 0x0f;
-            
-            if(r1 < 0 || r1 > 14 || r2 != 15){
-                currentAddress -= 2; // decrement before you call printinvalid
-                printInvalid(machineCode);
-                break;
-            }
-            
-            // valid instruction
-            printTwoBytes(outputFile, 11, -1, r1, r2);
-         break;
-         
-         // HANDLE any other case
-        default :
-            currentAddress = currentAddress - 1;
-            printInvalid(machineCode);
+
+      switch(theCharacter){
+          case 0x00 :
+            // we handle it above
             break;
-       }
-   }
-  
-  fclose(machineCode);
-  fclose(outputFile);
+          case 0
 
 
 
+
+      }
+  }
   fclose(machineCode);
   fclose(outputFile);
   return SUCCESS;
