@@ -9,4 +9,5 @@ void print_byte(FILE *out, int val);
 void print_pos(FILE *out, int pos);
 void print_halt(FILE *out);
 void print_position(FILE *out, int pos);
+void print_nop(FILE *out);
 #endif
