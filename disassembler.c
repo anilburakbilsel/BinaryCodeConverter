@@ -206,6 +206,7 @@ int main(int argc, char **argv)
 
             break;
             break;
+        return 0;
         }
 
         fclose(machineCode);
