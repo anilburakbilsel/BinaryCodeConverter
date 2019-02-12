@@ -206,7 +206,11 @@ int main(int argc, char **argv)
 
             break;
             break;
-        return 0;
+            
+        fclose(machineCode);
+        fclose(outputFile);
+        return SUCCESS;
+            
         }
 
         fclose(machineCode);
