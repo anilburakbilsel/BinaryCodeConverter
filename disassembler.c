@@ -77,22 +77,29 @@ int main(int argc, char **argv)
             currentAddress++;
         }
     }
+    // 3rd argument is not 0
     else
     {
+        // set the file position of the stream to the provided offset
+        // the provided offset is the 3rd argument (currentAddress)
         fseek(machineCode, currentAddress, SEEK_SET);
+        // find the first non-zero byte
         while (fgetc(machineCode) == 0)
         {
             currentAddress++;
         }
     }
-
+    // if the given binary file is empty
+    // simply do nothing and finish the execution
     if (feof(machineCode) && currentAddress == 0)
     {
         fclose(machineCode);
         fclose(outputFile);
         return SUCCESS;
     }
-
+    // if there is only one byte in the given binary file
+    // and if that byte is zero then
+    // simly print out zero byte and finish the execution
     if (feof(machineCode) && currentAddress == 1)
     {
         printZeroByte(outputFile, 0);
@@ -100,7 +107,11 @@ int main(int argc, char **argv)
         fclose(outputFile);
         return SUCCESS;
     }
-
+    // if there are more than one zero byte and
+    // if there are no non-zero byte
+    // then print the position of the last zero byte
+    // and also a zero byte indication then
+    // finish the execution
     if (feof(machineCode) && currentAddress > 1)
     {
         currentAddress--;
@@ -110,7 +121,7 @@ int main(int argc, char **argv)
         fclose(outputFile);
         return SUCCESS;
     }
-
+    // print out the position of the first non-zero byte
     if (currentAddress != 0)
     {
         print_pos(outputFile, currentAddress);
