@@ -67,8 +67,11 @@ int main(int argc, char **argv)
     fprintf(stderr, "Opened %s, starting offset 0x%lX\n", argv[1], currentAddress);
     fprintf(stderr, "Saving output to %s\n", argc <= 2 ? "standard output" : argv[2]);
 
+    // if 3rd argument is 0 or default
+    // default is 0 as well
     if (currentAddress == 0)
     {
+        // find the first non-zero byte
         while (fgetc(machineCode) == 0)
         {
             currentAddress++;
@@ -206,10 +209,10 @@ int main(int argc, char **argv)
 
             break;
             break;
-            return -1;
         }
 
         fclose(machineCode);
         fclose(outputFile);
         return SUCCESS;
     }
+}
