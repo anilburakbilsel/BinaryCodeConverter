@@ -137,6 +137,8 @@ int main(int argc, char **argv)
     // halt count
     int haltCount = 0;
 
+    // while it is not the end of the given binary file
+    // continue fetching and working on the provided bytes
     while (!(feof(machineCode)))
     {
         theCharacter = fgetc(machineCode);
@@ -220,6 +222,7 @@ int main(int argc, char **argv)
 
             break;
             break;
+            return;
         }
 
         fclose(machineCode);
