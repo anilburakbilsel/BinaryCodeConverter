@@ -215,6 +215,7 @@ int main(int argc, char **argv)
 
         // 0x10 for nop
         case 0x10:
+            print_nop(outputFile);
             break;
 
         //0x20 for cmov
@@ -222,7 +223,6 @@ int main(int argc, char **argv)
 
             break;
             break;
-            return;
         }
 
         fclose(machineCode);
