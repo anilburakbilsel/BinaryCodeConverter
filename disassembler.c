@@ -39,7 +39,7 @@ void printInvalid(FILE *in)
             fseek(in, currentAddress, SEEK_SET);
             int c = fgetc(in); // always valid; its called after getting the byte
             print_byte(outputFile, c);
-            currentAddress = currentAddress + 1;
+            currentAddress++;
         }
     }
     else
@@ -47,7 +47,7 @@ void printInvalid(FILE *in)
         fseek(in, currentAddress, SEEK_SET);
         int c = fgetc(in); // always valid; its called after getting the byte
         print_byte(outputFile, c);
-        currentAddress = currentAddress + 1;
+        currentAddress++;
         // file index is at next instruction
     }
 }
@@ -281,6 +281,15 @@ int main(int argc, char **argv)
             currentAddress++;
             register1 = (registers & 0xf0) >> 4;
             register2 = registers & 0x0f;
+            if (register1 < 0 || register2 < 0 || register1 > 14 || register2 > 14)
+            {
+                currentAddress -= 2; // decrement before you call printinvalid
+                printInvalid(machineCode);
+                break;
+            }
+            // if it is a valid cmov instruction:
+            printTwoBytes(outputFile, 2, iFun, register1, register2);
+            break;
         }
 
         fclose(machineCode);
