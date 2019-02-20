@@ -218,8 +218,10 @@ int main(int argc, char **argv)
             print_nop(outputFile);
             break;
 
-        //0x20 for cmov
+        // 0x20 for cmov
         case 0x20:
+            // we need to fetch the fn code
+
 
             break;
             break;
