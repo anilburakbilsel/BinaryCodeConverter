@@ -16,6 +16,42 @@
 long int currentAddress;        // index to start reading instructions
 FILE *machineCode, *outputFile; // files to read from/write to
 
+/* Checks the address if it is multiple of 8 and 
+ * the next 8 bytes if there is an 8-byte number it prints it;
+ * otherwise prints the byte number. Then it sets the currentAddress to 
+ * next instruction.
+ * @BEFORE: set currentAddress to beginning of the instruction.
+ */
+void printInvalid(FILE *in)
+{
+    long long quad;
+    fseek(in, currentAddress, SEEK_SET);
+    if (currentAddress % 8 == 0)
+    {
+        if (fread(&quad, 8, 1, in) == 1)
+        {
+            printQuadValue(outputFile, quad);
+            currentAddress = currentAddress + 8;
+            // file index is at next instruction
+        }
+        else
+        {
+            fseek(in, currentAddress, SEEK_SET);
+            int c = fgetc(in); // always valid; its called after getting the byte
+            print_byte(outputFile, c);
+            currentAddress = currentAddress + 1;
+        }
+    }
+    else
+    {
+        fseek(in, currentAddress, SEEK_SET);
+        int c = fgetc(in); // always valid; its called after getting the byte
+        print_byte(outputFile, c);
+        currentAddress = currentAddress + 1;
+        // file index is at next instruction
+    }
+}
+
 int main(int argc, char **argv)
 {
     // Verify that the command line has an appropriate number
@@ -144,6 +180,7 @@ int main(int argc, char **argv)
         theCharacter = fgetc(machineCode);
         currentAddress++;
 
+        // handle the case for zeros
         if (feof(machineCode))
         {
             if (haltCount == 1)
@@ -187,8 +224,9 @@ int main(int argc, char **argv)
             }
         }
 
+        // get the function (fn) codes for operations (OP) and
+        // conditioanl moves (cmov):
         int iFun;
-
         if ((0x0f & (theCharacter >> 4)) == 2)
         {
             iFun = theCharacter & 0x0f;
@@ -205,9 +243,12 @@ int main(int argc, char **argv)
             theCharacter = 0x70;
         }
 
+        int registers;
+        int register1;
+        int register2;
+
         switch (theCharacter)
         {
-
         // 0x00 for halt
         case 0x00:
             // we handle the case for 0x00 above
@@ -220,11 +261,26 @@ int main(int argc, char **argv)
 
         // 0x20 for cmov
         case 0x20:
-            // we need to fetch the fn code
-
-
-            break;
-            break;
+            // we need to fetch the fn (iFun) code
+            if ((iFun > 6) || (iFun < 0))
+            {
+                // it is an invalid instruction, check the address and print byte
+                currentAddress--;
+                printInvalid(machineCode);
+                break;
+            }
+            // check the registers if iFun and iCode are ok:
+            registers = fgetc(machineCode);
+            if (feof(machineCode))
+            {
+                currentAddress--;
+                printInvalid(machineCode);
+                break;
+            }
+            // update everytime we successfully read
+            currentAddress++;
+            register1 = (registers & 0xf0) >> 4;
+            register2 = registers & 0x0f;
         }
 
         fclose(machineCode);

@@ -10,4 +10,5 @@ void print_pos(FILE *out, int pos);
 void print_halt(FILE *out);
 void print_position(FILE *out, int pos);
 void print_nop(FILE *out);
+void print_quad(FILE *out, unsigned long long value);
 #endif

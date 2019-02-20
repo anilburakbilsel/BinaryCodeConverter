@@ -33,3 +33,9 @@ void print_nop(FILE *out)
 {
     fprintf(out, "    %-8s  # %-22s\n", "nop", "10");
 }
+
+void print_quad(FILE *out, int val)
+{
+    fprintf(out, "    %-8s0x%x    # 0X%x\n", ".quad", val, val);
+}
+
