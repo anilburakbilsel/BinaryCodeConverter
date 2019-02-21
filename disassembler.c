@@ -30,7 +30,7 @@ void printInvalid(FILE *in)
     {
         if (fread(&quad, 8, 1, in) == 1)
         {
-            printQuadValue(outputFile, quad);
+            print_quad(outputFile, quad);
             currentAddress = currentAddress + 8;
             // file index is at next instruction
         }
@@ -281,6 +281,7 @@ int main(int argc, char **argv)
             currentAddress++;
             register1 = (registers & 0xf0) >> 4;
             register2 = registers & 0x0f;
+            // check whether it is valid or not
             if (register1 < 0 || register2 < 0 || register1 > 14 || register2 > 14)
             {
                 currentAddress -= 2; // decrement before you call printinvalid

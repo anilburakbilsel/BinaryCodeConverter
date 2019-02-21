@@ -11,4 +11,5 @@ void print_halt(FILE *out);
 void print_position(FILE *out, int pos);
 void print_nop(FILE *out);
 void print_quad(FILE *out, int val);
+int printTwoBytes(FILE *out, int code, int fn, int reg1, int reg2);
 #endif
