@@ -295,6 +295,8 @@ int main(int argc, char **argv)
         // irmovq
         case 0x30:
             break;
+
+        // rmmov rA, D(rB)
         case 0x40:
             break;
         }
