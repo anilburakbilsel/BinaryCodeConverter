@@ -291,9 +291,11 @@ int main(int argc, char **argv)
             // if it is a valid cmov instruction:
             printTwoBytes(outputFile, 2, iFun, register1, register2);
             break;
-            
+
         // irmovq
         case 0x30:
+            break;
+        case 0x40:
             break;
         }
 
