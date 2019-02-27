@@ -299,6 +299,9 @@ int main(int argc, char **argv)
         // rmmov rA, D(rB)
         case 0x40:
             break;
+
+        case 0x50:
+            break;
         }
 
         fclose(machineCode);
