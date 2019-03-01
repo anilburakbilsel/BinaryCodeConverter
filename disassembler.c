@@ -302,15 +302,19 @@ int main(int argc, char **argv)
 
         case 0x50:
             break;
-        
-        
+
         case 0x60:
             break;
-            
+
         case 0x70:
             break;
+
+        case 0x80:
+            break;
+
+        case 0x90:
+            break;
         }
-        
 
         fclose(machineCode);
         fclose(outputFile);
