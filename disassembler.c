@@ -306,6 +306,9 @@ int main(int argc, char **argv)
         
         case 0x60:
             break;
+            
+        case 0x70:
+            break;
         }
         
 
