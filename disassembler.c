@@ -317,6 +317,8 @@ int main(int argc, char **argv)
         
         case 0xA0:
             break;
+        
+        case 0xB:
         }
 
         fclose(machineCode);
