@@ -320,6 +320,10 @@ int main(int argc, char **argv)
         
         case 0xB0:
             break;
+
+        // HANDLE any other case
+        default:
+            currentAddress = currentAddress - 1;
         }
 
         fclose(machineCode);
