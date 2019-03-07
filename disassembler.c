@@ -324,6 +324,8 @@ int main(int argc, char **argv)
         // HANDLE any other case
         default:
             currentAddress = currentAddress - 1;
+            printInvalid(machineCode);
+            break;
         }
 
         fclose(machineCode);
