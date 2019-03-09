@@ -327,7 +327,7 @@ int main(int argc, char **argv)
             printInvalid(machineCode);
             break;
         }
-
+        // at the end, always close all the files that you open!
         fclose(machineCode);
         fclose(outputFile);
         return SUCCESS;
